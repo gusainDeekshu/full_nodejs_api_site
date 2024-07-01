@@ -20,7 +20,7 @@ module.exports=async(req,res,next)=>{
 })
     }catch(error){
         console.log(error)
-        res.status(500).send({
+       return res.status(500).send({
 
             sucess:false,
             message:"please provide token",
