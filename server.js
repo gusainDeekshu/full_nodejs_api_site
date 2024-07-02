@@ -28,6 +28,9 @@ app.use('/api/v1/test', require('./routes/testroute'))
 app.use('/api/v1/auth', require('./routes/auth'))
 app.use('/api/v1/user', require('./routes/userroutes'))
 app.use('/api/v1/resturant', require('./routes/resturantroutes'))
+app.use('/api/v1/category', require('./routes/categoryroute'))
+app.use('/api/v1/food', require('./routes/foodroutes'))
+
 app.get('/',(req,res)=>{
     return res.send("<h1>welcome to food server</h1>");
 });
