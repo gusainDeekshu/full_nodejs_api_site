@@ -1,6 +1,7 @@
 const express=require('express');
 const authmiddleware = require('../middleware/authmiddleware.js');
-const { createfoodcontroller, getallfoodcontroller, getfoodbyidcontroller, getfoodbyresturantidcontroller, updatefoodcontroller, deletefoodcontroller } = require('../controllers/foodcontroller.js');
+const { createfoodcontroller, getallfoodcontroller, getfoodbyidcontroller, getfoodbyresturantidcontroller, updatefoodcontroller, deletefoodcontroller, placeordercontroller, orderstatuscontroller } = require('../controllers/foodcontroller.js');
+const adminmiddleware = require('../middleware/adminmiddleware.js');
 
 
 const router=express.Router();
@@ -20,5 +21,10 @@ router.get('/getall/:id',authmiddleware,getfoodbyresturantidcontroller)
 router.delete('/delete/:id',authmiddleware,deletefoodcontroller)
 //update food
 router.put('/update/:id',updatefoodcontroller)
+// place order 
+router.post('/order',placeordercontroller)
+//changing order status through admin
+router.post('/orderstatus/:id',authmiddleware,adminmiddleware,orderstatuscontroller)
+
 
 module.exports=router;

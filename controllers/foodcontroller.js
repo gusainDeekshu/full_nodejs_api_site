@@ -1,5 +1,6 @@
 
 const foodmodal = require("../models/foodmodal");
+const ordermodal = require("../models/ordermodal");
 //create category
 
 const createfoodcontroller = async (req, res) => {
@@ -236,11 +237,83 @@ const deletefoodcontroller = async (req, res) => {
   }
 };
 
+
+// place order
+const placeordercontroller = async (req, res) => {
+  try {
+    const {cart,payment}=req.body;
+    if(!cart){
+      return res.status(500).send({
+        sucess:false,
+        message:"place order or payment"
+      })
+    }
+    let total =0;
+    //calculating cart price
+    cart.map((i) =>{
+      total += i.price;
+    })
+
+    const neworder=new ordermodal({
+      foods:cart,payment:total,buyer:req.body.id
+    })
+    await neworder.save()
+    res.status(201).send({
+      sucess: true,
+      message: "order placed sucessfully",
+      neworder,
+    }); 
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      sucess: false,
+      message: "Error in placing order api",
+      error,
+    });
+  }
+};
+//change order status 
+const orderstatuscontroller=async(req,res)=>{
+  try {
+   const orderid=req.params.id;
+   if(!orderid){
+    return res.status(404).send({
+      sucess: false,
+      message: "requested id or  not found",
+      error,
+    });
+   }
+   const {status}=req.body;
+   const order=await ordermodal.findByIdAndUpdate(orderid,{status},{new:true})
+   if(!order){
+    return res.status(401).send({
+      sucess: false,
+      message: "requested id or status  not found",
+      error,
+    });
+   }
+   res.status(200).send({
+    sucess: true,
+    message: "status updated sucessfully",
+    
+  });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      sucess: false,
+      message: "Error in changing order status",
+      error,
+    });
+  } 
+}
+
 module.exports = {
   createfoodcontroller,
   getallfoodcontroller,
   getfoodbyidcontroller,
   getfoodbyresturantidcontroller,
   updatefoodcontroller,
-  deletefoodcontroller
+  deletefoodcontroller,
+  placeordercontroller,
+  orderstatuscontroller
 };
